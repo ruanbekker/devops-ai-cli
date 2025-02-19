@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/ruanbekker/go-cli-starter/internal/logger"
+	"github.com/ruanbekker/devops-ai-cli/internal/logger"
 )
 
-// Default version
 var version = "dev"
 
-// Function to fetch the version (can be mocked in tests)
 var getVersion = func() string {
 	configVersion := viper.GetString("version")
 	if configVersion == "" {
@@ -21,19 +19,13 @@ var getVersion = func() string {
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version of go-cli-starter",
+	Short: "Print the version of devops-ai-cli",
 	Run: func(cmd *cobra.Command, args []string) {
 		logger.Log("Running version command")
-		// Get the version from Viper (config.yaml), fallback to default if empty
-		//configVersion := viper.GetString("version")
-		//if configVersion == "" {
-		//	configVersion = version
-		//}
 		if viper.GetBool("debug") {
-			fmt.Println("CLI Starter - Debug Mode")
+			fmt.Println("DevOps AI CLI - Debug Mode")
 		}
-		// fmt.Printf("CLI Starter v%s\n", configVersion)
-		fmt.Printf("CLI Starter v%s\n", getVersion())
+		fmt.Printf("DevOps AI CLI v%s\n", getVersion())
 	},
 }
 

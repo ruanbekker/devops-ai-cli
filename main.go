@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ruanbekker/go-cli-starter/cmd"
+	"github.com/ruanbekker/devops-ai-cli/cmd"
 )
 
 func main() {

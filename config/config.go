@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/viper"
-	"github.com/ruanbekker/go-cli-starter/internal/logger"
+	"github.com/ruanbekker/devops-ai-cli/internal/logger"
 )
 
 // InitConfig initializes configuration

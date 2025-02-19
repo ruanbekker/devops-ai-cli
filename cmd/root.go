@@ -5,14 +5,14 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/ruanbekker/go-cli-starter/config"
-	"github.com/ruanbekker/go-cli-starter/internal/logger"
+	"github.com/ruanbekker/devops-ai-cli/config"
+	"github.com/ruanbekker/devops-ai-cli/internal/logger"
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "starter",
-	Short: "A minimal CLI starter template",
-	Long:  `Starter CLI is a simple, extensible Go CLI using Cobra and Viper.`,
+	Use:   "devopscli",
+	Short: "A DevOps CLI",
+	Long:  `DevOps AI CLI is a simple, extensible Go CLI using Cobra and Viper.`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if viper.GetBool("debug") {
 			logger.Log("Debug mode is enabled")
