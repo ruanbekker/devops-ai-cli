@@ -4,7 +4,7 @@ run:
 
 # Build binary
 build:
-	go build -o starter main.go
+	go build -o devopscli main.go
 
 # Install locally
 install:
@@ -13,7 +13,7 @@ install:
 # Clean
 clean:
 	go clean -cache -modcache -testcache -fuzzcache
-	rm -f starter
+	rm -f devopscli
 
 # Format the code
 fmt:
