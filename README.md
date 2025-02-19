@@ -1,8 +1,8 @@
-# go-cli-starter
+# devops-ai-cli
 
 ## About
 
-This is a **Go CLI Starter** project built with **Cobra** and **Viper**. It provides a modular, extensible structure for creating CLI tools.
+This is a personal project to have a cli terminal tool written in Go with Viper and Cobra.
 
 ## Pre-requirements
 
@@ -52,6 +52,18 @@ go get github.com/charmbracelet/glamour
 ## Features
 
 ### Render a Markdown File
+
+Install dependencies:
+
+```bash
+go mod tidy
+```
+
+Build the cli:
+
+```bash
+go build -o devopscli main.go
+```
 
 Create a markdown file:
 
