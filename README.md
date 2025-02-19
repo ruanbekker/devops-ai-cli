@@ -77,6 +77,40 @@ Render markdown from a file:
 ./devopscli render -f example.md
 ```
 
+### Explain command
+
+The `explain` command allows you to ask OpenWebUI for explanations on various topics, and it will return a response formatted in Markdown.
+
+#### Usage
+
+```bash
+./devopscli explain "what does the Kubernetes CrashLoopBackOff mean?"
+```
+
+#### Configuration
+
+To use this command, you need to configure OpenWebUI API details. You can do this in one of two ways:
+
+Option 1: Using config.yaml:
+
+```yaml
+openwebui:
+  host: "http://localhost:3000"
+  api_key: "your-api-key-here"
+```
+
+Option 2: Using an Environment Variable:
+
+```bash
+export OPENWEB_API_KEY="your-secret-api-key"
+```
+
+#### How it works
+
+- The CLI sends a request to OpenWebUI with your query.
+- OpenWebUI processes the request and returns a response.
+- The response is rendered as Markdown using `glamour`.
+
 ## Resources
 
 - [charmbracelet/glow](https://github.com/charmbracelet/glow)
