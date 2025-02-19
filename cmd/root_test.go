@@ -5,8 +5,8 @@ import (
 )
 
 func TestRootCmd(t *testing.T) {
-	if rootCmd.Use != "starter" {
-		t.Errorf("expected root command to be 'starter', got %s", rootCmd.Use)
+	if rootCmd.Use != "devopscli" {
+		t.Errorf("expected root command to be 'devopscli', got %s", rootCmd.Use)
 	}
 }
 
