@@ -1,23 +1,30 @@
 # devops-ai-cli
 
+**devops-ai-cli** is a personal CLI tool written in **Go**, powered by **Cobra** and **Viper**. 
+
 ## About
 
-This is a personal project to have a cli terminal tool written in Go with Viper and Cobra.
+It's a cli tool that includes some of the following:
+- Rendering Markdown.
+- Querying OpenWebUI AI models from the terminal.
 
-## Pre-requirements
+## 🚀 Installation
 
-You will need [Go](https://go.dev/dl/) installed, you can test using:
+### **Prerequisites**
 
-```bash
+You need [Go](https://go.dev/dl/) installed. Check with:
+
+```sh
 go version
 ```
 
+If Go is **not installed**, you can install version `1.24.0` on Linux
+
 <details>
-  <summary>If that fails, read more</summary>
+  <summary>Read more</summary>
 
-If you see: `go: command not found`, you will need to install Go. For version `1.24.0` on Linux, you can run:
 
-```bash
+```sh
 curl -fsSL https://golang.org/dl/go1.24.0.linux-amd64.tar.gz | sudo tar -C /usr/local -xzf -
 export PATH=$PATH:/usr/local/go/bin
 echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.bashrc
@@ -25,73 +32,63 @@ echo "export GOPATH=\$HOME/go" >> ~/.bashrc
 echo "export GOROOT=/usr/local/go" >> ~/.bashrc
 ```
 
-Now you should get a version back when running `go version` and then to test:
+Now, verify installation:
 
-```bash
-echo 'package main; import "fmt"; func main() { fmt.Println("Hello, Go!") }' > test.go
-go run test.go
-rm -f test.go
+```sh
+go version
 ```
 
 </details>
 
-## Steps
+## 🛠️ Setup & Usage
 
-<details>
-  <summary>View the steps</summary>
+### **1️⃣ Install Dependencies**
 
-Download the `glow` library:
-
-```bash
-go get github.com/charmbracelet/glow
-go get github.com/charmbracelet/glamour
-```
-
-</details>
-
-## Features
-
-### Render a Markdown File
-
-Install dependencies:
-
-```bash
+```sh
 go mod tidy
 ```
 
-Build the cli:
+### **2️⃣ Build the CLI**
 
-```bash
+```sh
 go build -o devopscli main.go
 ```
 
-Create a markdown file:
+## ✨ Features
 
-```bash
-echo "# Hello World!" > example.md
-```
+### **📜 Render a Markdown File**
 
-Render markdown from a file:
+The `render` command allows you to display Markdown files beautifully in the terminal.
 
-```bash
+#### **Usage**
+
+```sh
 ./devopscli render -f example.md
 ```
 
-### Explain command
+#### **Example**
 
-The `explain` command allows you to ask OpenWebUI for explanations on various topics, and it will return a response formatted in Markdown.
+```sh
+echo "# Hello, World!" > example.md
+./devopscli render -f example.md
+```
 
-#### Usage
+### **🤖 Explain Command**
 
-```bash
+The `explain` command allows you to ask **OpenWebUI AI** for explanations on various topics,  
+and it returns a response **formatted in Markdown**.
+
+#### **Usage**
+
+```sh
 ./devopscli explain "what does the Kubernetes CrashLoopBackOff mean?"
 ```
 
-#### Configuration
+#### **Configuration**
 
-To use this command, you need to configure OpenWebUI API details. You can do this in one of two ways:
+To use this command, configure OpenWebUI API details in one of two ways:
 
-Option 1: Using config.yaml:
+**📌 Option 1: Using `config.yaml`**
 
 ```yaml
 openwebui:
@@ -99,19 +96,20 @@ openwebui:
   api_key: "your-api-key-here"
 ```
 
-Option 2: Using an Environment Variable:
+**📌 Option 2: Using an Environment Variable**
 
-```bash
+```sh
 export OPENWEB_API_KEY="your-secret-api-key"
 ```
 
-#### How it works
+#### **How It Works**
 
-- The CLI sends a request to OpenWebUI with your query.
-- OpenWebUI processes the request and returns a response.
-- The response is rendered as Markdown using `glamour`.
+✅ The CLI sends a request to OpenWebUI with your query.  
+✅ OpenWebUI processes the request and returns a response.  
+✅ The response is rendered as **Markdown** using `glamour`.  
 
-## Resources
+## 📚 Resources
 
-- [charmbracelet/glow](https://github.com/charmbracelet/glow)
+- [Charmbracelet Glow](https://github.com/charmbracelet/glow)  
+- [Charmbracelet Glamour](https://github.com/charmbracelet/glamour)  
 
