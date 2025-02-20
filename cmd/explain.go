@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/ruanbekker/devops-ai-cli/internal/logger"
 	"github.com/charmbracelet/glamour"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -24,6 +25,12 @@ var explainCmd = &cobra.Command{
 		// Read API settings from config.yaml
 		apiHost := viper.GetString("openwebui.host")
 		apiKey := viper.GetString("openwebui.api_key")
+		aiModel := viper.GetString("openwebui.model")
+
+		// If no API host in config, check environment variable
+		if apiHost == "" {
+			apiHost = os.Getenv("OPENWEB_API_HOST")
+		}
 
 		// If no API key in config, check environment variable
 		if apiKey == "" {
@@ -38,7 +45,7 @@ var explainCmd = &cobra.Command{
 
 		// Construct API request payload
 		requestBody, err := json.Marshal(map[string]interface{}{
-			"model": "gemma:2b",
+			"model": aiModel,
 			"messages": []map[string]string{
 				{"role": "user", "content": query},
 			},
@@ -47,6 +54,12 @@ var explainCmd = &cobra.Command{
 			fmt.Printf("Error creating JSON payload: %v\n", err)
 			os.Exit(1)
 		}
+
+		// Before API request, log any debug messages if enabled
+		if viper.GetBool("debug") {
+			usageMessage := fmt.Sprintf("explain: using %s model.\n", aiModel)
+			logger.Log(usageMessage)
+                }
 
 		// Send API request
 		url := fmt.Sprintf("%s/api/chat/completions", apiHost)
