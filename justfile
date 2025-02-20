@@ -23,3 +23,6 @@ fmt:
 run-debug:
 	go run main.go --debug=true
 
+# Run goreleaser test
+run-release:
+	goreleaser --snapshot --skip-publish --rm-dist
