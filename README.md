@@ -5,8 +5,8 @@
 ## About
 
 It's a cli tool that includes some of the following:
-- Rendering Markdown.
-- Querying OpenWebUI AI models from the terminal.
+- [Rendering Markdown](#-render-a-markdown-file)
+- [Querying OpenWebUI AI models from the terminal](#-explain-command)
 
 ## 🚀 Installation
 
