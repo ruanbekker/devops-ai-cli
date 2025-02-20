@@ -3,3 +3,4 @@ version: "1.0.0"
 openwebui:
   host: "http://localhost:3000"
   api_key: ""
+  model: "gemma:2b"
