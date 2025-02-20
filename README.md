@@ -7,6 +7,7 @@
 It's a cli tool that includes some of the following:
 - [Rendering Markdown](#-render-a-markdown-file)
 - [Querying OpenWebUI AI models from the terminal](#-explain-command)
+- [Optimize Files: AI Recommendations](#-optimize-command
 
 ## 🚀 Installation
 
@@ -108,6 +109,63 @@ export OPENWEB_API_HOST="http://localhost:3000"
 ✅ The CLI sends a request to OpenWebUI with your query.  
 ✅ OpenWebUI processes the request and returns a response.  
 ✅ The response is rendered as **Markdown** using `glamour`.  
+
+## **🚀 Optimize Command**
+
+The `optimize` command allows you to **send a code or configuration file** (e.g., **YAML, JSON, Python, Terraform, Shell scripts**) to **OpenWebUI AI**, which will analyze and provide **optimization suggestions in Markdown format**.
+
+### **🔹 Usage**
+
+```sh
+./devopscli optimize -f _extras/manifests/example-deployment.yaml 
+```
+
+**Example for a Terraform file:**
+```sh
+./devopscli optimize -f infra.tf
+```
+
+**Example for a Python script:**
+
+```sh
+./devopscli optimize -f script.py
+```
+
+### **⚙️ Configuration**
+
+To use this command, configure OpenWebUI API details **via a config file or environment variables**.
+
+#### **📌 Option 1: Using `config.yaml`**
+
+```yaml
+openwebui:
+  host: "http://localhost:3000"
+  api_key: "your-api-key-here"
+  model: "gemma:2b"
+```
+
+#### **📌 Option 2: Using Environment Variables**
+
+```sh
+export OPENWEB_API_KEY="your-secret-api-key"
+export OPENWEB_API_HOST="http://localhost:3000"
+```
+
+### **📝 Example Output**
+
+If you run:
+
+```sh
+./devopscli optimize -f _extras/manifests/example-deployment.yaml
+```
+
+The response from AI will be returned in markdown format.
+
+## **✨ Summary**
+
+✅ **Supports multiple file types (YAML, JSON, .py, .tf, .sh, etc.)**  
+✅ **Sends the file content to OpenWebUI for AI-based optimization**  
+✅ **Receives Markdown suggestions and beautifully renders them in the terminal**  
 
 ## 📚 Resources
 
