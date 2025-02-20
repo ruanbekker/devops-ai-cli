@@ -8,6 +8,7 @@ It's a cli tool that includes some of the following:
 - [Rendering Markdown](#-render-a-markdown-file)
 - [Querying OpenWebUI AI models from the terminal](#-explain-command)
 - [Optimize Files: AI Recommendations](#-optimize-command)
+- [Verify: Check if tools from config are installed](#-verify-installed-tools)
 
 ## 🚀 Installation
 
@@ -161,11 +162,59 @@ If you run:
 
 The response from AI will be returned in markdown format.
 
-## **✨ Summary**
+### **✨ Summary**
 
 ✅ **Supports multiple file types (YAML, JSON, .py, .tf, .sh, etc.)**  
 ✅ **Sends the file content to OpenWebUI for AI-based optimization**  
 ✅ **Receives Markdown suggestions and beautifully renders them in the terminal**  
+
+## **🔍 Verify Installed Tools**
+
+The `verify tools` command checks whether **required DevOps tools** are installed on your system. It reads the list of tools from **`config.yaml`** and reports their availability.
+
+### **📝 Usage**
+
+```sh
+./devopscli verify tools
+```
+
+### **📌 Example Configuration**
+
+Define required tools in **`config.yaml`**:
+
+```yaml
+tools:
+  required:
+    - kubectl
+    - terraform
+    - docker
+    - helm
+    - git
+    - jq
+    - curl
+```
+
+### **📌 Example Output**
+
+```sh
+🔍 **Verifying Required Tools:**
+
+✅ kubectl
+❌ terraform (Not Installed)
+✅ docker
+✅ helm
+✅ git
+❌ jq (Not Installed)
+✅ curl
+```
+
+### **💡 Features**
+
+✅ **Reads required tools from `config.yaml`**  
+✅ **Checks if each tool is installed**  
+✅ **Displays ✅ (installed) and ❌ (missing)**  
+✅ **Fast and lightweight!**  
+
 
 ## 📚 Resources
 
