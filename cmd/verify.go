@@ -23,7 +23,8 @@ on your local system. Displays a ✅ for installed tools and ❌ for missing one
 			os.Exit(1)
 		}
 
-		fmt.Println("\n🔍 **Verifying Required Tools:**\n")
+		fmt.Println("\n🔍 **Verifying Required Tools:**")
+		fmt.Println("")
 
 		// Check each tool and display result
 		for _, tool := range requiredTools {
