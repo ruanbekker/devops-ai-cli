@@ -96,10 +96,11 @@ openwebui:
   api_key: "your-api-key-here"
 ```
 
-**📌 Option 2: Using an Environment Variable**
+**📌 Option 2: Using Environment Variables**
 
 ```sh
 export OPENWEB_API_KEY="your-secret-api-key"
+export OPENWEB_API_HOST="http://localhost:3000"
 ```
 
 #### **How It Works**
