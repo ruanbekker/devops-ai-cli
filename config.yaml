@@ -4,3 +4,13 @@ openwebui:
   host: "http://localhost:3000"
   api_key: ""
   model: "gemma:2b"
+
+tools:
+  required:
+    - kubectl
+    - terraform
+    - docker
+    - helm
+    - git
+    - jq
+    - curl
