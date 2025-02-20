@@ -2,6 +2,10 @@
 run:
 	go run main.go
 
+# Test the code
+test:
+	go test ./... -v
+
 # Build binary
 build:
 	go build -o devopscli main.go
