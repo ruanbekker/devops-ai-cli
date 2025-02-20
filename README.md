@@ -175,7 +175,7 @@ The `verify tools` command checks whether **required DevOps tools** are installe
 ### **📝 Usage**
 
 ```sh
-./devopscli verify tools
+./devopscli verify
 ```
 
 ### **📌 Example Configuration**
