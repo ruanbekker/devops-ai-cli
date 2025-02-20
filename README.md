@@ -170,7 +170,7 @@ The response from AI will be returned in markdown format.
 
 ## **🔍 Verify Installed Tools**
 
-The `verify tools` command checks whether **required DevOps tools** are installed on your system. It reads the list of tools from **`config.yaml`** and reports their availability.
+The `verify` command checks whether **required DevOps tools** are installed on your system. It reads the list of tools from **`config.yaml`** and reports their availability.
 
 ### **📝 Usage**
 
