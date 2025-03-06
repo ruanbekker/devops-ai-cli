@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strconv"
 
 	"github.com/charmbracelet/glamour"
 	"github.com/ruanbekker/devops-ai-cli/internal/logger"
@@ -16,21 +17,45 @@ import (
 )
 
 // Path to store conversation history
-var sessionFile = filepath.Join(os.TempDir(), "devopscli_session.json")
+var sessionFile = filepath.Join(os.Getenv("HOME"), ".devopscli_sessions.json")
 
-// Store conversation ID (simulated via local storage)
+// Flags
 var conversationID string
+var listConversations bool
+
+// Define a structure for conversations
+type Conversation struct {
+	ID      int                    `json:"id"`
+	History []map[string]string    `json:"history"`
+	Query   string                 `json:"query"`
+}
+
+// Define a slice to store conversations
+type Conversations struct {
+	List []Conversation `json:"conversations"`
+}
 
 var queryCmd = &cobra.Command{
 	Use:   "query <message>",
 	Short: "Ask OpenWebUI a question and maintain conversation context",
 	Long: `Send a question to OpenWebUI and get a response.
 Use --cid "<conversation-id>" to continue a previous conversation.`,
-	Args: cobra.ExactArgs(1),
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		// If --list is used, show all conversations
+		if listConversations {
+			listStoredConversations()
+			return
+		}
+
+		if len(args) == 0 {
+			fmt.Println("Error: Please provide a query or use --list to view previous conversations.")
+			os.Exit(1)
+		}
+
 		message := args[0]
 
-		// Read API settings from config.yaml or environment variables
+		// Read API settings
 		apiHost := viper.GetString("openwebui.host")
 		apiKey := viper.GetString("openwebui.api_key")
 		aiModel := viper.GetString("openwebui.model")
@@ -47,16 +72,17 @@ Use --cid "<conversation-id>" to continue a previous conversation.`,
 			os.Exit(1)
 		}
 
-		// Read existing conversation history if --cid is provided
+		// Load conversation history if --cid is used
 		history := []map[string]string{}
+		conversationNumber := 0
 		if conversationID != "" {
-			history = loadConversationHistory(conversationID)
+			history, conversationNumber = loadConversationByID(conversationID)
 		}
 
-		// Append the new user query to the history
+		// Append new user query
 		history = append(history, map[string]string{"role": "user", "content": message})
 
-		// Debug logging
+		// Debug log
 		if viper.GetBool("debug") {
 			logger.Log(fmt.Sprintf("query: using %s model, conversation ID: %s", aiModel, conversationID))
 		}
@@ -71,8 +97,8 @@ Use --cid "<conversation-id>" to continue a previous conversation.`,
 		// Append AI response to history
 		history = append(history, map[string]string{"role": "assistant", "content": response})
 
-		// Save the updated history with a new "conversation ID"
-		newCID := saveConversationHistory(history)
+		// Save updated conversation history
+		newCID := saveConversation(history, conversationNumber, message)
 
 		// Render Markdown response
 		renderer, err := glamour.NewTermRenderer(
@@ -91,39 +117,34 @@ Use --cid "<conversation-id>" to continue a previous conversation.`,
 		}
 
 		fmt.Println(renderedOutput)
-
-		// Show the new conversation ID
-		fmt.Printf("\n🆔 **Conversation ID**: %s\n", newCID)
+		fmt.Printf("\n🆔 **Conversation ID**: %d\n", newCID)
 	},
 }
 
 func init() {
 	queryCmd.Flags().StringVarP(&conversationID, "cid", "c", "", "Continue a conversation with a conversation ID")
+	queryCmd.Flags().BoolVarP(&listConversations, "list", "l", false, "List previous conversations")
 	rootCmd.AddCommand(queryCmd)
 }
 
 // sendQueryToOpenWebUI sends a conversation to OpenWebUI API and returns the AI response
 func sendQueryToOpenWebUI(apiHost, apiKey, model string, history []map[string]string) (string, error) {
-	// Prepare API request payload
 	payload := map[string]interface{}{
 		"model":    model,
 		"messages": history,
 	}
 
-	// Convert payload to JSON
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
 		return "", err
 	}
 
-	// Send request
 	url := fmt.Sprintf("%s/api/chat/completions", apiHost)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return "", err
 	}
 
-	// Set headers
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 
@@ -134,13 +155,11 @@ func sendQueryToOpenWebUI(apiHost, apiKey, model string, history []map[string]st
 	}
 	defer resp.Body.Close()
 
-	// Read response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return "", err
 	}
 
-	// Parse JSON response
 	var jsonResponse struct {
 		Choices []struct {
 			Message struct {
@@ -153,47 +172,81 @@ func sendQueryToOpenWebUI(apiHost, apiKey, model string, history []map[string]st
 		return "", err
 	}
 
-	// Extract response content
 	if len(jsonResponse.Choices) == 0 {
 		return "⚠️ No response received from OpenWebUI", nil
 	}
 	return jsonResponse.Choices[0].Message.Content, nil
 }
 
-// saveConversationHistory saves a conversation and returns a new CID
-func saveConversationHistory(history []map[string]string) string {
-	// Generate a fake "conversation ID" (incremental number)
-	cid := fmt.Sprintf("%d", len(history))
+// saveConversation saves a conversation and returns its ID
+func saveConversation(history []map[string]string, existingCID int, query string) int {
+	conversations := loadAllConversations()
+	conversationID := existingCID
 
-	// Save the history to a session file
-	file, err := os.Create(sessionFile)
-	if err != nil {
-		fmt.Println("Error saving conversation:", err)
-		return cid
+	if existingCID == 0 {
+		conversationID = len(conversations.List) + 1
+		conversations.List = append(conversations.List, Conversation{ID: conversationID, History: history, Query: query})
+	} else {
+		for i, conv := range conversations.List {
+			if conv.ID == existingCID {
+				conversations.List[i].History = history
+			}
+		}
 	}
-	defer file.Close()
 
-	jsonData, err := json.Marshal(history)
+	jsonData, err := json.MarshalIndent(conversations, "", "  ")
 	if err != nil {
 		fmt.Println("Error encoding conversation:", err)
-		return cid
+		return conversationID
 	}
-	file.Write(jsonData)
 
-	return cid
+	err = os.WriteFile(sessionFile, jsonData, 0644)
+	if err != nil {
+		fmt.Println("Error saving conversation:", err)
+	}
+
+	return conversationID
 }
 
-// loadConversationHistory loads a conversation by CID
-func loadConversationHistory(cid string) []map[string]string {
-	file, err := os.Open(sessionFile)
+// loadConversationByID retrieves a specific conversation
+func loadConversationByID(cid string) ([]map[string]string, int) {
+	conversations := loadAllConversations()
+	id, err := strconv.Atoi(cid)
 	if err != nil {
-		// No history found, return empty
-		return []map[string]string{}
+		return nil, 0
 	}
-	defer file.Close()
 
-	var history []map[string]string
-	json.NewDecoder(file).Decode(&history)
-	return history
+	for _, conv := range conversations.List {
+		if conv.ID == id {
+			return conv.History, conv.ID
+		}
+	}
+	return nil, 0
+}
+
+// loadAllConversations retrieves all stored conversations
+func loadAllConversations() Conversations {
+	data, err := os.ReadFile(sessionFile)
+	if err != nil {
+		return Conversations{}
+	}
+
+	var conversations Conversations
+	json.Unmarshal(data, &conversations)
+	return conversations
+}
+
+// listStoredConversations lists all stored conversations
+func listStoredConversations() {
+	conversations := loadAllConversations()
+	if len(conversations.List) == 0 {
+		fmt.Println("No previous conversations found.")
+		return
+	}
+
+	fmt.Println("\n📝 **Previous Conversations:**")
+	for _, conv := range conversations.List {
+		fmt.Printf("🆔 %d: %s\n", conv.ID, conv.Query)
+	}
 }
 
