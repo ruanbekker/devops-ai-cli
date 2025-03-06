@@ -7,7 +7,7 @@
 It's a cli tool that includes some of the following:
 - [Rendering Markdown](#-render-a-markdown-file)
 - [Explain with OpenWebUI AI models from the terminal](#-explain-command)
-- [Query with OpenWebUI - Continuing Conversations from the terminal](#-query-command)
+- [Query with OpenWebUI - Continuing Conversations from the terminal](#-query-command-maintain-conversations)
 - [Optimize Files: AI Recommendations](#-optimize-command)
 - [Verify: Check if tools from config are installed](#-verify-installed-tools)
 
