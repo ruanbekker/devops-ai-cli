@@ -6,7 +6,8 @@
 
 It's a cli tool that includes some of the following:
 - [Rendering Markdown](#-render-a-markdown-file)
-- [Querying OpenWebUI AI models from the terminal](#-explain-command)
+- [Explain with OpenWebUI AI models from the terminal](#-explain-command)
+- [Query with OpenWebUI - Continuing Conversations from the terminal](#-query-command)
 - [Optimize Files: AI Recommendations](#-optimize-command)
 - [Verify: Check if tools from config are installed](#-verify-installed-tools)
 
@@ -111,11 +112,92 @@ export OPENWEB_API_HOST="http://localhost:3000"
 ✅ OpenWebUI processes the request and returns a response.  
 ✅ The response is rendered as **Markdown** using `glamour`.  
 
-## **🚀 Optimize Command**
+### **🤖 Query Command (Maintain Conversations)**
+
+The `query` command allows you to **ask OpenWebUI AI questions** while maintaining **context** across multiple queries.
+
+#### **📝 Basic Usage**
+
+```sh
+./devopscli query "What is Kubernetes?"
+```
+
+#### **Example Response**
+
+```
+  # Kubernetes Explained
+  Kubernetes is an open-source container orchestration system...
+🆔 **Conversation ID**: 1
+```
+
+_This assigns the question a **Conversation ID (`1`)**, allowing follow-ups._
+
+
+#### **🔄 Continue a Conversation**
+
+To ask **follow-up questions**, use the **`--cid`** flag with the **conversation ID**:
+
+```sh
+./devopscli query "How does Kubernetes handle scaling?" --cid "1"
+```
+
+#### **Example Response**
+
+```
+  # Kubernetes Scaling
+  - Uses Horizontal Pod Autoscaler (HPA)
+  - Uses Cluster Autoscaler
+  - Supports Vertical Pod Autoscaling
+```
+
+_This maintains context and follows up on the previous question._
+
+#### **📋 List Saved Conversations**
+
+```sh
+./devopscli query --list
+```
+
+#### **Example Output**
+
+```
+📝 **Previous Conversations:**
+🆔 1: What is Kubernetes?
+🆔 2: How does Kubernetes handle deployments?
+```
+
+_This lets you see which past questions you can continue._
+
+#### **🗑️ Delete a Specific Conversation**
+
+```sh
+./devopscli query --delete 1
+```
+
+✅ Removes **conversation ID `1`** from storage.
+
+#### **🚨 Clear All Conversations**
+
+```sh
+./devopscli query --clear
+```
+
+🗑️ **Deletes all stored conversations**.
+
+#### **✨ Features**
+
+✅ **Maintains conversation history**  
+✅ **Allows follow-up questions (`--cid`)**  
+✅ **Lists previous queries (`--list`)**  
+✅ **Deletes single (`--delete`) or all (`--clear`) conversations**  
+✅ **Uses OpenWebUI API for intelligent responses**  
+✅ **Outputs beautifully formatted Markdown responses**  
+
+### **🚀 Optimize Command**
 
 The `optimize` command allows you to **send a code or configuration file** (e.g., **YAML, JSON, Python, Terraform, Shell scripts**) to **OpenWebUI AI**, which will analyze and provide **optimization suggestions in Markdown format**.
 
-### **🔹 Usage**
+#### **🔹 Usage**
 
 ```sh
 ./devopscli optimize -f _extras/manifests/example-deployment.yaml 
@@ -168,17 +250,17 @@ The response from AI will be returned in markdown format.
 ✅ **Sends the file content to OpenWebUI for AI-based optimization**  
 ✅ **Receives Markdown suggestions and beautifully renders them in the terminal**  
 
-## **🔍 Verify Installed Tools**
+### **🔍 Verify Installed Tools**
 
 The `verify` command checks whether **required DevOps tools** are installed on your system. It reads the list of tools from **`config.yaml`** and reports their availability.
 
-### **📝 Usage**
+#### **📝 Usage**
 
 ```sh
 ./devopscli verify
 ```
 
-### **📌 Example Configuration**
+#### **📌 Example Configuration**
 
 Define required tools in **`config.yaml`**:
 
@@ -194,7 +276,7 @@ tools:
     - curl
 ```
 
-### **📌 Example Output**
+#### **📌 Example Output**
 
 ```sh
 🔍 **Verifying Required Tools:**
@@ -208,7 +290,7 @@ tools:
 ✅ curl
 ```
 
-### **💡 Features**
+#### **💡 Features**
 
 ✅ **Reads required tools from `config.yaml`**  
 ✅ **Checks if each tool is installed**  
