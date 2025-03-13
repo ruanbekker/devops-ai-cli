@@ -5,6 +5,7 @@
 ## About
 
 It's a cli tool that includes some of the following:
+- [Initialize](#-initialize-configuration)
 - [Rendering Markdown](#-render-a-markdown-file)
 - [Explain with OpenWebUI AI models from the terminal](#-explain-command)
 - [Query with OpenWebUI - Continuing Conversations from the terminal](#-query-command-maintain-conversations)
@@ -58,6 +59,37 @@ go build -o devopscli main.go
 ```
 
 ## ✨ Features
+
+### **🛠️ Initialize Configuration**
+
+The `init` command **creates a default configuration file**.
+
+#### **📌 Usage**
+
+```sh
+./devopscli init
+```
+
+This will create a configuration file at `~/.config/devopscli/config.yaml`
+
+#### **📌 Example Config (config.yaml)**
+
+```yaml
+openwebui:
+  host: "http://localhost:3000"
+  api_key: "your-api-key-here"
+  model: "gpt-4-turbo"
+
+debug: false
+```
+
+#### **📌 Overriding the Config Location**
+
+By default, devopscli uses `~/.config/devopscli/config.yaml` for its configuration and to use a **custom location** you can set `DEVOPSCLI_CONFIG_LOCATION` environment variable:
+
+```bash
+export DEVOPSCLI_CONFIG_LOCATION="$HOME/.devopscli/config.yaml"
+```
 
 ### **📜 Render a Markdown File**
 

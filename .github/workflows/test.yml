@@ -41,7 +41,7 @@ jobs:
           go-version: '1.24'
 
       - name: Build CLI
-        run: go build -o starter main.go
+        run: go build -o devopscli main.go
 
       - name: Run CLI
         run: ./starter version --debug
