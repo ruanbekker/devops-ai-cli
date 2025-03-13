@@ -19,7 +19,7 @@ var rootCmd = &cobra.Command{
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Run `starter help` for available commands")
+		fmt.Println("Run `devopscli help` for available commands")
 	},
 }
 
