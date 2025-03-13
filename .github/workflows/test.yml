@@ -44,4 +44,4 @@ jobs:
         run: go build -o devopscli main.go
 
       - name: Run CLI
-        run: ./starter version --debug
+        run: ./devopscli version --debug
